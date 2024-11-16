@@ -206,40 +206,7 @@ bubble; this won't *just* be `Throw` and `Catch.
 
 -------------------------------------------------------------------------------}
 smallStep :: (Expr, Expr) -> Maybe (Expr, Expr)
-smallStep (prog, acc) = case prog of
-    Plus m n -> 
-        case m of
-            Const i -> 
-                case n of
-                    Const j -> Just (Const (i + j), acc)
-                    _       -> Just (Plus (Const i) (stepExpr n acc), acc)
-            _ -> Just (Plus (stepExpr m acc) n, acc)
-
-    Store m -> 
-        case m of
-            Const i -> Just (Store (Const i), Const i)
-            _ -> Just (Store (stepExpr m acc), acc)
-
-    Throw m -> 
-        case m of
-            Const i -> Just (Throw (Const i), acc)
-            _ -> Just (Throw (stepExpr m acc), acc)
-
-    Catch m y n -> 
-        case m of
-            Throw w -> Just (subst y w n, acc)
-            _ -> Just (Catch (stepExpr m acc) y n, acc)
-
-    Recall -> Just (Recall, acc)
-
-    _ -> Nothing
-
-
-stepExpr :: Expr -> Expr -> Expr
-stepExpr expr acc = 
-    case smallStep (expr, acc) of
-        Just (e', _) -> e'
-        Nothing -> expr
+smallStep = undefined
 
 steps :: (Expr, Expr) -> [(Expr, Expr)]
 steps s = case smallStep s of
